@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.parsley-errors-list {
+    color: #dc2626;
+    font-size: 0.875rem; /* 14px */
+}
