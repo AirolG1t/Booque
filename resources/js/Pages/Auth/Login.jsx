@@ -1,6 +1,4 @@
-import { useEffect, useRef } from 'react';
-import $ from 'jquery'; // Import jQuery
-import 'parsleyjs'; // Import Parsley
+import { useEffect } from 'react';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
@@ -11,15 +9,12 @@ import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
+        username: '',
         password: '',
         remember: false,
     });
 
-    const formRef = useRef(null);
-
     useEffect(() => {
-        $(formRef.current).parsley(); // Initialize Parsley on the form
         return () => {
             reset('password');
         };
@@ -28,12 +23,7 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        // Validate the form using Parsley
-        const isValid = $(formRef.current).parsley().validate();
-
-        if (isValid) {
-            post(route('login'));
-        }
+        post(route('login'));
     };
 
     return (
@@ -42,25 +32,22 @@ export default function Login({ status, canResetPassword }) {
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
-            <form ref={formRef} onSubmit={submit}>
+            <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="username" value="Username" />
 
                     <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        placeholder="example@gmail.com"
+                        id="username"
+                        type="text"
+                        name="username"
+                        value={data.username}
                         className="mt-1 block w-full"
-                        autoComplete="username"
+                        autoComplete="off"
                         isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                        data-parsley-trigger="change"
-                        data-parsley-required-message="Email field is required." 
-                        required 
+                        onChange={(e) => setData('username', e.target.value)}
                     />
 
+                    <InputError message={errors.username} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -71,17 +58,12 @@ export default function Login({ status, canResetPassword }) {
                         type="password"
                         name="password"
                         value={data.password}
-                        placeholder="••••••••"
                         className="mt-1 block w-full"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
-                        data-parsley-trigger="change" 
-                        data-parsley-required-message="Password field is required." 
-                        // data-parsley-minlength="8"
-                        // data-parsley-minlength-message="Password must be at least 8 characters long." 
-                        required 
                     />
 
+                    <InputError message={errors.password} className="mt-2" />
                 </div>
 
                 <div className="block mt-4">
@@ -95,10 +77,6 @@ export default function Login({ status, canResetPassword }) {
                     </label>
                 </div>
 
-                <div className="flex items-center justify-center mt-2">
-                    <InputError message={errors.email} className="mt-2 text-red-600 text-sm" />
-                </div>
-
                 <div className="flex items-center justify-center mt-4">
                     <PrimaryButton className="" disabled={processing}>
                         Log in
@@ -107,14 +85,14 @@ export default function Login({ status, canResetPassword }) {
 
                 <div className='flex items-center justify-between mt-4'>
                     <Link
-                        href={route('password.request')}
+                        href={route('register')}
                         className="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1EB6CF]">
                         Sign up
                     </Link>
 
                     {canResetPassword && (
                             <Link
-                                href={route('password.request')}
+                                // href={route('password.request')}
                                 className="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1EB6CF]">
                                 Forgot your password?
                             </Link>
